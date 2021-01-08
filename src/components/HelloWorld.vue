@@ -31,10 +31,47 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import gql from 'graphql-tag'
 
 @Component
 export default class HelloWorld extends Vue {
   @Prop() private msg!: string;
+
+  async created()
+  {
+    // await this.$apollo.query({
+    //   query: gql(`query
+    //   { 
+    //     users
+    //     {
+    //       data
+    //       {
+    //         id
+    //         name
+    //         email
+    //       }
+    //   }}`)})
+    // .then(res => console.log(res.data.users.data))
+
+    const obs = this.$apollo.subscribe({
+      query: gql(`subscription
+        UserUpdated
+        {
+          userUpdated
+          {
+            id
+            name
+            email
+            password
+          }
+        }`)})
+    obs.subscribe({
+      next: (data: any) => { console.log(data) },
+      error: (error: any) => console.log(error)
+    })
+  }
+
+
 }
 </script>
 
