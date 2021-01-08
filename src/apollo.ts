@@ -2,17 +2,15 @@ import { ApolloLink, Observable } from "apollo-link";
 
 // Inspired by https://github.com/rmosolgo/graphql-ruby/blob/master/javascript_client/src/subscriptions/PusherLink.ts
 export default class PusherLink extends ApolloLink {
-  pusher: any
+  pusher: any = undefined
   constructor(options: any) {
     super();
 
     this.pusher = options.pusher;
   }
 
-  request(operation: any, forward: any): any
-  {
+  request(operation: any, forward: any): any {
     const subscribeObservable = new Observable((_observer) => {
-      //
     });
 
     // Capture the super method
@@ -98,6 +96,7 @@ function getObserver(observerOrNext: any, onError: any, onComplete: any) {
   if (typeof observerOrNext === "function") {
     // Duck-type an observer
     return {
+      // next: (v: any) => observerOrNext(v),
       next: (v: any) => observerOrNext(v),
       error: (e: any) => onError && onError(e),
       complete: () => onComplete && onComplete(),
